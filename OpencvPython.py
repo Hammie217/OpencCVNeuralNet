@@ -2,6 +2,8 @@ import numpy as np
 import cv2 as cv
 from random import randint
 
+NumberofNets = 40
+
 class neuralNet:
     def __init__(self, first, second, third, fourth, fivth, sixth, seventh, eighth, nineth):
         self.neuron1Strength = first
@@ -18,7 +20,7 @@ class neuralNet:
 nets = []
 def createRandomNets():
  
-    for i in range(4):
+    for i in range(NumberofNets):
         nets.append(neuralNet(randint(0,100),randint(0,100),randint(0,100),randint(0,100),randint(0,100),randint(0,100),randint(0,100),randint(0,100),randint(0,100)))
     return
 
@@ -26,7 +28,7 @@ fileNumber =1
 img = cv.imread('rgbd_dataset_freiburg1_xyz/rgb/rgb'+str(fileNumber) + ".png")
 createRandomNets()
 
-for i in range(4):
+for i in range(NumberofNets):
     print("Neuron" +str(i) +" " +str(nets[i].neuron1Strength/100) +" " + str(nets[i].neuron2Strength/100) +" " + str(nets[i].neuron3Strength/100) +" " + str(nets[i].neuron4Strength/100) +" " + str(nets[i].neuron5Strength/100) +" " + str(nets[i].neuron6Strength/100) +" " + str(nets[i].neuron7Strength/100) +" " + str(nets[i].neuron8Strength/100) +" " + str(nets[i].neuron9Strength/100))
 
 while (True):
@@ -54,7 +56,7 @@ while (True):
     
     h=img.shape[0]
     w=img.shape[1]
-    for i in range(4):
+    for i in range(NumberofNets):
         for y in range(0, h):
             for x in range(0, w):
                 nets[i].saliencyMap[y, x] = imgDepth[y,x]*nets[i].neuron1Strength/100 + imgDifference[y,x]*nets[i].neuron2Strength/100 + StrongCanny[y,x]*nets[i].neuron3Strength/100 + MedCanny[y,x]*nets[i].neuron4Strength/100 + WeakCanny[y,x]*nets[i].neuron5Strength/100 + imgGrey[y,x]*nets[i].neuron6Strength/100 + red[y,x]*nets[i].neuron7Strength/100 + green[y,x]*nets[i].neuron8Strength/100 + blue[y,x]*nets[i].neuron9Strength/100
@@ -71,9 +73,6 @@ while (True):
     #cv.imshow('Green',green)
     #cv.imshow('Blue',blue)
     cv.imshow('SalencyMap0',nets[0].saliencyMap)
-    cv.imshow('SalencyMap1',nets[1].saliencyMap)
-    cv.imshow('SalencyMap2',nets[2].saliencyMap)
-    cv.imshow('SalencyMap3',nets[3].saliencyMap)
 
     fileNumber=fileNumber +1;
     if cv.waitKey(1) & 0xFF == ord('q'):
